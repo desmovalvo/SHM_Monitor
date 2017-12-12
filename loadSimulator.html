@@ -25,22 +25,25 @@
     <div class="card-group">
       
       <!-- File loader -->    
-      <div class="card w-25 p-3 border border-primary rounded-0">
-	<h3 class="card-title text-primary"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Load JSAP</h3>
+      <div class="card w-25 border border-primary rounded-0">
+	<div class="card-header text-primary"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Load JSAP</div>
 	<div class="card-body font-weight-light">
 	  <form>
 	    <div class="form-group">
 	      <label for="formFile1">Thing Description</label>
 	      <input type="file" class="form-control-file" id="formFile1">
 	    </div>
-	    <button type="button" class="btn btn-primary" onClick="javascript:loadJSAP();">Load</button>
+	    
 	  </form>
+	</div>
+	<div class="card-footer">
+	  <button type="button" class="btn btn-primary" onClick="javascript:loadJSAP();">Load</button>
 	</div>
       </div>
 
       <!-- SEPA -->
-      <div class="card w-25 p-3 border border-primary rounded-0">
-	<h3 class="card-title text-primary"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;SEPA Params</h3>
+      <div class="card w-25 border border-primary rounded-0">
+	<div class="card-header text-primary"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;SEPA Params</div>
 	<div class="card-body font-weight-light">
 	  <form>
 	    <div class="form-group">
@@ -55,22 +58,25 @@
 	      <label for="sepaQueryURL"><i class="fa fa-download" aria-hidden="true"></i>&nbsp;Query URL</label>
 	      <input type="text" class="form-control" id="sepaQueryURL" placeholder="http://localhost:8000/query">
 	    </div>
-	    <button type="button" class="btn btn-primary" onClick="javascript:clearSEPA();">Clear SEPA</button>
 	  </form>
+	</div>
+	<div class="card-footer">
+	  <button type="button" class="btn btn-primary" onClick="javascript:clearSEPA();">Clear SEPA</button>
 	</div>
       </div>
       
-      <div class="card w-25 p-3 border border-primary rounded-0">
-	<h3 class="card-title text-primary"><i class="fa fa-plug" aria-hidden="true"></i>&nbsp;Device Classes</h3>
+      <div class="card w-25 border border-primary rounded-0">
+	<div class="card-header text-primary"><i class="fa fa-plug" aria-hidden="true"></i>&nbsp;Device Classes</div>
 	<div class="card-body font-weight-light">
 
 	  <table class="table font-weight-light" id="devTypesTable">
-	  </table>
-
-	  <button type="button" class="btn btn-primary" onClick="javascript:startSim();">Start Simulation</button>
+	  </table>	  
 	  
 	</div>
-      </div> 
+	<div class="card-footer">
+	  <button type="button" class="btn btn-primary" onClick="javascript:startSim();">Start Simulation</button>
+	</div>
+      </div>
     </div>
     <!-- END OF CARD GROUP -->
 
@@ -78,24 +84,24 @@
 
 
       <!-- SEPA -->
-      <div class="card w-25 p-3 border border-primary rounded-0">
-	<h3 class="card-title text-primary"><i class="fa fa-tags" aria-hidden="true"></i>&nbsp;Properties</h3>
+      <div class="card w-25 border border-primary rounded-0">
+	<div class="card-header text-primary"><i class="fa fa-tags" aria-hidden="true"></i>&nbsp;Properties</div>
 	<div class="card-body font-weight-light">
 	  <table class="table" id="propertiesTable">
 	  </table>
 	</div>
       </div>
       
-      <div class="card w-25 p-3 border border-primary rounded-0">
-	<h3 class="card-title text-primary"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;Events</h3>
+      <div class="card w-25 border border-primary rounded-0">
+	<div class="card-header text-primary"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;Events</div>
 	<div class="card-body font-weight-light">
 	  <table class="table" id="eventsTable">
 	  </table>	  
 	</div>
       </div>
       
-      <div class="card w-25 p-3 border border-primary rounded-0">
-	<h3 class="card-title text-primary"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;Actions</h3>
+      <div class="card w-25 border border-primary rounded-0">
+	<div class="card-header text-primary"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;Actions</div>
 	<div class="card-body font-weight-light">
 	  <table class="table" id="actionsTable">
 	  </table>	  
@@ -105,34 +111,49 @@
     <!-- END OF CARD GROUP -->
 
     <!-- LOG -->
-    <div class="card border p-3 border-primary rounded-0">
-      <h3 class="card-title text-primary"><i class="fa fa-bars" aria-hidden="true"></i>&nbsp;Log Window</h3>
-      <div class="card-body font-weight-light" id="logWindow">
+    <div class="card border-primary rounded-0">
+      <div class="card-header text-primary">
+	<i class="fa fa-bars" aria-hidden="true"></i>&nbsp;Log Window
+      </div>
+      <div class="card-body">
+	<div class="card-text font-weight-light collapse" id="logWindow">
+	</div>
+      </div>
+      <div class="card-footer">
+	<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#logWindow" aria-expanded="false" aria-controls="collapseExample">Show/Hide</button>
       </div>
     </div>
 
     <div class="card-group">
-      <div class="card w-25 p-3 border border-primary rounded-0">
-	<h3 class="card-title text-primary"><i class="fa fa-bar-chart" aria-hidden="true"></i>&nbsp;Statistics</h3>
+      <div class="card w-25 border border-primary rounded-0">
+	<div class="card-header text-primary"><i class="fa fa-bar-chart" aria-hidden="true"></i>&nbsp;Statistics</div>
 	<div class="card-body font-weight-light">
+	  <div id="charts"></div>
+	</div>
+
+	<div class="card-footer">
 	  <button type="button" class="btn btn-primary" onClick="javascript:getStatistics();">Get statistics</button>	
-	  <div id="charts"></div>
 	</div>
+	
       </div>
 
-      <div class="card w-25 p-3 border border-primary rounded-0">
-	<h3 class="card-title text-primary"><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;Subscriptions</h3>
+      <div class="card w-25 border border-primary rounded-0">
+	<div class="card-header text-primary"><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;Subscriptions</div>
 	<div class="card-body font-weight-light">
+	  <div id="charts"></div>
+	</div>
+	<div class="card-footer">
 	  <button type="button" class="btn btn-primary" onClick="">Get statistics</button>	
-	  <div id="charts"></div>
 	</div>
       </div>
 
-      <div class="card w-25 p-3 border border-primary rounded-0">
-	<h3 class="card-title text-primary"><i class="fa fa-question-circle-o" aria-hidden="true"></i>&nbsp;Documentation</h3>
+      <div class="card w-25 border border-primary rounded-0">
+	<div class="card-header text-primary"><i class="fa fa-question-circle-o" aria-hidden="true"></i>&nbsp;Documentation</div>
 	<div class="card-body font-weight-light">
-	  <button type="button" class="btn btn-primary" onClick="">Show help</button>	
 	  <div id="charts"></div>
+	</div>
+	<div class="card-footer">
+	  <button type="button" class="btn btn-primary" onClick="">Show Help</button>	
 	</div>
       </div> 
       
