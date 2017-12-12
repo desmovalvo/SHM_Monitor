@@ -65,7 +65,8 @@ function loadJSAP(){
 	    devTypes = sc.jsap["extended"]["devices"];
 	    for (dev in devTypes){
 		newRow = devTable.insertRow(0);
-		newRow.insertCell(0).outerHTML = dev;
+		newRow.insertCell(0).innerHTML = "<div contenteditable id=" + dev + ">" + devTypes[dev]["number"] + "</div>";		
+		newRow.insertCell(0).innerHTML = dev;
 		
 		// load properties types
 		for (act in sc.jsap["extended"]["devices"][dev]["actions"]){
@@ -95,13 +96,15 @@ function startSim(){
     
     // iterate over the classes of devices
     for (devType in devTypes){
-	console.log("[DEBUG] Creating " + devTypes[devType]["number"] + " instances of " + devTypes[devType]["thing"]);
 
 	// get the thing URI and name scheme
 	[thingURIScheme, thingNameScheme] = devTypes[devType]["thing"].split("|");
 	
 	// create the right number of instances
-	for (i = 0; i < devTypes[devType]["number"]; i++){
+	devNumber = document.getElementById(devType).innerHTML;
+	console.log("[DEBUG] Creating " + devNumber + " instances of " + devTypes[devType]["thing"]);
+	
+	for (i = 0; i < devNumber; i++){
 
 	    // generate real thing URI and name
 	    uuid = generateUUID();

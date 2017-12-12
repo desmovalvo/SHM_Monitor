@@ -396,7 +396,7 @@
                 "actions":["shm:getHistory|Get History", "shm:setHealth|Set Health"],
                 "number":1
             },
-            "Impact Sensor":{
+            "ImpactSensor":{
                 "thing":"shm:ImpactSensor_$(UUID)|ImpactSensor_$(UUID)",
                 "properties": ["shm:belongsToStructure|Structure", "shm:hasPosition|Position"],
                 "events":["wot:Ping|Ping", "shm:hasImpact|Impact"],
