@@ -1,92 +1,149 @@
-devTypes = {};
+var devTypes = {};
+var sc = null;
+
+function generateUUID() {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};
 
 function loadJSAP(){
 
     // debug
-    console.log("[DEBUG] invoked loadJSAP function");    
+    console.log("[DEBUG] invoked loadJSAP function");
     
     //check if file reader is supported
     if ( ! window.FileReader ) {
 	console.log("[ERROR] FileReader API is not supported by your browser.");
 	return false;
     }
-
+    
+    // clear all the tables
+    devTable = document.getElementById("devTypesTable");
+    eventsTable = document.getElementById("eventsTable");
+    actionsTable = document.getElementById("actionsTable");
+    propertiesTable = document.getElementById("propertiesTable");
+    clearTable(devTable);
+    clearTable(eventsTable);
+    clearTable(actionsTable);
+    clearTable(propertiesTable);	    
+    
     // load data
     var $i = $('#formFile1');		
     input = $i[0];
     if (input.files && input.files[0]) {
 	file = input.files[0];
 	console.log(file);
+	console.log($);
 	
 	// create a mew instance of the file reader
 	fr = new FileReader();		    
 	var text;
 	fr.onload = function () {
 	    
-	    // read the content of the file
+	    // read the content of the file and create a SEPA Client
 	    var decodedData = fr.result;
-	    
-	    // parse the JSON file
-	    myJson = JSON.parse(decodedData);
-
+	    sc = new SEPAClient();
+	    sc.getJsap(decodedData);
+    
 	    // load SEPA URIs
-	    uURI = "http://" + myJson["parameters"]["host"] + ":" + myJson["parameters"]["ports"]["http"] + myJson["parameters"]["paths"]["update"];	    
-	    document.getElementById("sepaUpdateURL").value = uURI;	    
-	    qURI = "http://" + myJson["parameters"]["host"] + ":" + myJson["parameters"]["ports"]["http"] + myJson["parameters"]["paths"]["query"];
-	    document.getElementById("sepaQueryURL").value = qURI;    
-	    sURI = "ws://" + myJson["parameters"]["host"] + ":" + myJson["parameters"]["ports"]["ws"] + myJson["parameters"]["paths"]["subscribe"];
-	    document.getElementById("sepaSubscribeURL").value = sURI;        
+	    document.getElementById("sepaUpdateURL").value = sc.updateURI;
+	    document.getElementById("sepaQueryURL").value = sc.queryURI;    
+	    document.getElementById("sepaSubscribeURL").value = sc.subscribeURI;        
 
-	    // clear all the tables
-	    devTable = document.getElementById("devTypesTable");
-	    eventsTable = document.getElementById("eventsTable");
-	    actionsTable = document.getElementById("actionsTable");
-	    propertiesTable = document.getElementById("propertiesTable");
-	    clearTable(devTable);
-	    clearTable(eventsTable);
-	    clearTable(actionsTable);
-	    clearTable(propertiesTable);
-	    
 	    // load device types
-	    devTypes = myJson["extended"]["devices"];
-	    for (dev in myJson["extended"]["devices"]){
+	    devTypes = sc.jsap["extended"]["devices"];
+	    for (dev in devTypes){
 		newRow = devTable.insertRow(0);
 		newRow.insertCell(0).outerHTML = dev;
-
+		
 		// load properties types
-		for (act in myJson["extended"]["devices"][dev]["actions"]){
+		for (act in sc.jsap["extended"]["devices"][dev]["actions"]){
 		    newRow = actionsTable.insertRow(0);
-		    newRow.insertCell(0).outerHTML = myJson["extended"]["devices"][dev]["actions"][act] + " (" + dev + ")";
+		    newRow.insertCell(0).outerHTML = sc.jsap["extended"]["devices"][dev]["actions"][act] + " (" + dev + ")";
 		}	    	    
-		for (prop in myJson["extended"]["devices"][dev]["properties"]){
+		for (prop in sc.jsap["extended"]["devices"][dev]["properties"]){
 		    newRow = propertiesTable.insertRow(0);
-		    newRow.insertCell(0).outerHTML = myJson["extended"]["devices"][dev]["properties"][prop] + " (" + dev + ")";
+		    newRow.insertCell(0).outerHTML = sc.jsap["extended"]["devices"][dev]["properties"][prop] + " (" + dev + ")";
 		}
-		for (ev in myJson["extended"]["devices"][dev]["events"]){
+		for (ev in sc.jsap["extended"]["devices"][dev]["events"]){
 		    newRow = eventsTable.insertRow(0);
-		    newRow.insertCell(0).outerHTML = myJson["extended"]["devices"][dev]["events"][ev] + " (" + dev + ")";
+		    newRow.insertCell(0).outerHTML = sc.jsap["extended"]["devices"][dev]["events"][ev] + " (" + dev + ")";
 		}	    	    
 		
 	    }	    	    
-	    
 	};
-	fr.readAsText(file);	
-	
+	fr.readAsText(file);		
     }
-    
 }
 
 
 function startSim(){
 
+    // get the log window
+    logWindow = document.getElementById("logWindow");
+    
     // iterate over the classes of devices
-    console.log(devTypes);
     for (devType in devTypes){
-	console.log(devType);
 	console.log("Creating " + devTypes[devType]["number"] + " instances of " + devTypes[devType]["thing"]);
 
-	for (action in devTypes[devType]["actions"]){
-	    console.log(devTypes[devType]["actions"][action]);
+	// get the thing URI and name scheme
+	[thingURIScheme, thingNameScheme] = devTypes[devType]["thing"].split("|");
+	
+	// create the right number of instances
+	for (i = 0; i < devTypes[devType]["number"]; i++){
+
+	    // generate real thing URI and name
+	    uuid = generateUUID();
+	    thingURI = thingURIScheme.replace("$(UUID)", uuid);
+	    thingName = "'" + thingNameScheme.replace("$(UUID)", uuid) + "'";	  
+	    sc.doUpdate(sc.getUpdate("ADD_NEW_THING", {"thing":thingURI, "name":thingName}),
+			function(){
+			    logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_NEW_THING(' + thingURI + "," + thingName + ")<br>";
+			},
+			function(){
+			    logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_NEW_THING(' + thingURI + "," + thingName + ")<br>";
+			});
+	    
+	    // generate properties
+	    for (prop in devTypes[devType]["properties"]){
+	    	[propURI,propName] = devTypes[devType]["properties"][prop].split("|");
+		sc.doUpdate(sc.getUpdate("ADD_PROPERTY", {"thing":thingURI, "property":propURI, "propName":propName}),
+			function(){
+			    logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_PROPERTY(' + thingURI + "," + propURI + "," + propName + ")<br>";
+			},
+			function(){
+			    logWindow.innerHTML += '<i class="fa fa-times" aria-hidden="true"></i> ADD_PROPERTY(' + thingURI + "," + propURI + "," + propName + ")<br>";
+			});		
+	    }
+	    
+	    // generate events
+	    for (event in devTypes[devType]["events"]){
+	    	[eventURI,eventName] = devTypes[devType]["events"][event].split("|");
+		sc.doUpdate(sc.getUpdate("ADD_EVENT", {"event":eventURI, "thing":thingURI, "eName":eventName, "outDataSchema":"-"}),
+			    function(){
+				logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_EVENT(' + eventURI + "," + thingURI + "," + eventName + ")<br>";
+			    },
+			    function(){
+				logWindow.innerHTML += '<i class="fa fa-times" aria-hidden="true"></i> ADD_EVENT(' + eventURI + "," + thingURI + "," + eventName + ")<br>";
+			    });				
+	    }
+	    
+	    // generate actions
+	    for (action in devTypes[devType]["actions"]){
+	    	[actionURI,actionName] = devTypes[devType]["actions"][action].split("|");
+		sc.doUpdate(sc.getUpdate("ADD_NEW_ACTION", {"thing":thingURI, "action":actionURI, "actionName":actionName}),
+			    function(){
+				logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_NEW_ACTION(' + thingURI + "," + actionURI + "," + actionName + ")<br>";
+			    },
+			    function(){
+				logWindow.innerHTML += '<i class="fa fa-times" aria-hidden="true"></i> ADD_NEW_ACTION(' + thingURI + "," + actionURI + "," + actionName + ")<br>";
+			    });	
+	    }
 	}
 	
     }

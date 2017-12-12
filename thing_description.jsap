@@ -22,8 +22,9 @@
         "dul": "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#",
         "ire": "http://w3c.github.io/wot/w3c-wot-td-ire.owl#",
         "rdfs": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-        "td": "http://wot.arces.unibo.it/ontology/web_of_things#",
-        "xsd": "http://www.w3.org/2001/XMLSchema"
+        "td":  "http://wot.arces.unibo.it/ontology/web_of_things#",
+        "xsd": "http://www.w3.org/2001/XMLSchema",
+	"shm": "http://shm.arces.unibo.it#"
     },
     "updates": {
         "POST_ACTION_INSTANCE_NO_INPUT": {
@@ -388,26 +389,26 @@
     "creation_time": "2017-12-07 18:15:08",
     "extended":{
         "devices":{
-            "PLATE":{
+            "Plate":{
                 "thing":"shm:Plate_$(UUID)|Plate_$(UUID)",
                 "properties":["shm:hasHealth|Health"],
                 "events":["wot:Ping|Ping", "shm:Impact|Impact"],
                 "actions":["shm:getHistory|Get History", "shm:setHealth|Set Health"],
-                "number":5
+                "number":1
             },
-            "IMPACTSENSOR":{
+            "Impact Sensor":{
                 "thing":"shm:ImpactSensor_$(UUID)|ImpactSensor_$(UUID)",
                 "properties": ["shm:belongsToStructure|Structure", "shm:hasPosition|Position"],
                 "events":["wot:Ping|Ping", "shm:hasImpact|Impact"],
                 "actions": ["shm:getHistory|Get History", "shm:setMode|Set Mode"],
-                "number":20
+                "number":1
             },
-            "ACCELEROMETER":{
+            "Accelerometer":{
                 "thing":"shm:Accelerometer_$(UUID)|Accelerometer_$(UUID)",
                 "properties": ["shm:belongsToStructure|Structure", "shm:hasPosition|Position"],
                 "events":["wot:Ping|Ping", "shm:hasImpact|Impact"],
                 "actions": ["shm:getHistory|Get History", "shm:setMode|Set Mode", "shm:getAcceleration|Get Acceleration"],
-                "number":20
+                "number":1
             }               
         }
     }
