@@ -18,6 +18,12 @@ function SEPAClient(){
     this.subscribeURI = null;
     this.prefixes = null;
     this.lastUpdate = null;
+
+    // attributes used for statistics
+    this.updateRequests = 0;
+    this.updateRequestsSucc = 0;
+    this.updateRequestsFail = 0;
+    this.updateTimes = []
     
     //////////////////////////////////////////////////////////////
     //
@@ -48,7 +54,15 @@ function SEPAClient(){
 
     // update
     this.doUpdate = function (updText, successCallback, failureCallback){
+
+	// debug print
 	console.log("doUpdate invoked");
+
+	// update counter
+	this.updateRequests += 1;
+
+	// do the update
+	var t0 = performance.now();
 	var req = $.ajax({
 	    url: this.updateURI,
 	    crossOrigin: true,
@@ -58,7 +72,7 @@ function SEPAClient(){
 	    error: function(event){
 		console.log("[SEPA kpi] Connection failed!" + updText);
 		if (failureCallback !== undefined)
-		    failureCallback();
+		    failureCallback();		
 	    },
 	    success: function(data){
 		console.log("[SEPA kpi] Connection succeeded!");
@@ -66,6 +80,8 @@ function SEPAClient(){
 		    successCallback();
 	    }
 	});
+	var t1 = performance.now();
+	this.updateTimes.push((t1-t0).toFixed(3));
     };
     
     // query

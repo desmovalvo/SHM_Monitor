@@ -161,3 +161,26 @@ function clearTable(table){
 	table.deleteRow(-1);
     };
 }
+
+function getStatistics() {
+
+    console.log(sc.updateRequests);
+    console.log(sc.updateTimes);
+
+    // updates
+    var trace1 = {
+	y: sc.updateTimes,
+	type: 'box',
+	name: 'Update Times (ms)'
+    };
+    
+    var data = [trace1];
+
+    // set chart layout
+    var layout = {
+	title: 'SEPA performance data'
+    };
+
+    // plot!
+    Plotly.newPlot('charts', data, layout);
+}

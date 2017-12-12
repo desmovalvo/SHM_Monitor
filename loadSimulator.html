@@ -7,6 +7,7 @@
     <script src="jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="bootstrap-4.0.0-beta.2/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="plotly.min.js"></script>
     <script src="SEPA_kpi.js"></script>
     <script src="loadSimulator.js"></script>
   </head>
@@ -78,7 +79,7 @@
 
       <!-- SEPA -->
       <div class="card w-25 p-3 border border-primary rounded-0">
-	<h3 class="card-title text-primary"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;Properties</h3>
+	<h3 class="card-title text-primary"><i class="fa fa-tags" aria-hidden="true"></i>&nbsp;Properties</h3>
 	<div class="card-body font-weight-light">
 	  <table class="table" id="propertiesTable">
 	  </table>
@@ -86,7 +87,7 @@
       </div>
       
       <div class="card w-25 p-3 border border-primary rounded-0">
-	<h3 class="card-title text-primary"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;Events</h3>
+	<h3 class="card-title text-primary"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;Events</h3>
 	<div class="card-body font-weight-light">
 	  <table class="table" id="eventsTable">
 	  </table>	  
@@ -94,7 +95,7 @@
       </div>
       
       <div class="card w-25 p-3 border border-primary rounded-0">
-	<h3 class="card-title text-primary"><i class="fa fa-plug" aria-hidden="true"></i>&nbsp;Actions</h3>
+	<h3 class="card-title text-primary"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;Actions</h3>
 	<div class="card-body font-weight-light">
 	  <table class="table" id="actionsTable">
 	  </table>	  
@@ -103,18 +104,38 @@
     </div>
     <!-- END OF CARD GROUP -->
 
-    
-    <!-- <div class="card border p-3 border-primary rounded-0"> -->
-    <!--   <h3 class="card-title text-primary"><i class="fa fa-bar-chart" aria-hidden="true"></i>&nbsp;Simulation Status</h3> -->
-    <!--   <div class="card-body font-weight-light"> -->
-    <!--   </div> -->
-    <!-- </div> -->
-
     <!-- LOG -->
     <div class="card border p-3 border-primary rounded-0">
-      <h3 class="card-title text-primary"><i class="fa fa-bar-chart" aria-hidden="true"></i>&nbsp;Log Window</h3>
+      <h3 class="card-title text-primary"><i class="fa fa-bars" aria-hidden="true"></i>&nbsp;Log Window</h3>
       <div class="card-body font-weight-light" id="logWindow">
       </div>
+    </div>
+
+    <div class="card-group">
+      <div class="card w-25 p-3 border border-primary rounded-0">
+	<h3 class="card-title text-primary"><i class="fa fa-bar-chart" aria-hidden="true"></i>&nbsp;Statistics</h3>
+	<div class="card-body font-weight-light">
+	  <button type="button" class="btn btn-primary" onClick="javascript:getStatistics();">Get statistics</button>	
+	  <div id="charts"></div>
+	</div>
+      </div>
+
+      <div class="card w-25 p-3 border border-primary rounded-0">
+	<h3 class="card-title text-primary"><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;Subscriptions</h3>
+	<div class="card-body font-weight-light">
+	  <button type="button" class="btn btn-primary" onClick="">Get statistics</button>	
+	  <div id="charts"></div>
+	</div>
+      </div>
+
+      <div class="card w-25 p-3 border border-primary rounded-0">
+	<h3 class="card-title text-primary"><i class="fa fa-question-circle-o" aria-hidden="true"></i>&nbsp;Documentation</h3>
+	<div class="card-body font-weight-light">
+	  <button type="button" class="btn btn-primary" onClick="">Show help</button>	
+	  <div id="charts"></div>
+	</div>
+      </div> 
+      
     </div>
     
 </html>
