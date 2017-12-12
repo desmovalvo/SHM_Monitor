@@ -14,7 +14,7 @@
 
   <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-white">
       <a class="navbar-brand" href="#">SEPA LoadSimulator</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 	<span class="navbar-toggler-icon"></span>
@@ -26,7 +26,7 @@
       
       <!-- File loader -->    
       <div class="card w-25 border border-primary rounded-0">
-	<div class="card-header text-primary"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Load JSAP</div>
+	<div class="card-header text-white bg-primary rounded-0"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Load JSAP</div>
 	<div class="card-body font-weight-light">
 	  <form>
 	    <div class="form-group">
@@ -37,13 +37,13 @@
 	  </form>
 	</div>
 	<div class="card-footer">
-	  <button type="button" class="btn btn-primary" onClick="javascript:loadJSAP();">Load</button>
+	  <button type="button" class="btn btn-primary btn-sm" onClick="javascript:loadJSAP();">Load</button>
 	</div>
       </div>
 
       <!-- SEPA -->
       <div class="card w-25 border border-primary rounded-0">
-	<div class="card-header text-primary"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;SEPA Params</div>
+	<div class="card-header text-white bg-primary rounded-0"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;SEPA Params</div>
 	<div class="card-body font-weight-light">
 	  <form>
 	    <div class="form-group">
@@ -61,12 +61,12 @@
 	  </form>
 	</div>
 	<div class="card-footer">
-	  <button type="button" class="btn btn-primary" onClick="javascript:clearSEPA();">Clear SEPA</button>
+	  <button type="button" class="btn btn-primary btn-sm" onClick="javascript:clearSEPA();">Clear SEPA</button>
 	</div>
       </div>
       
       <div class="card w-25 border border-primary rounded-0">
-	<div class="card-header text-primary"><i class="fa fa-plug" aria-hidden="true"></i>&nbsp;Device Classes</div>
+	<div class="card-header text-white bg-primary rounded-0"><i class="fa fa-plug" aria-hidden="true"></i>&nbsp;Device Classes</div>
 	<div class="card-body font-weight-light">
 
 	  <table class="table font-weight-light" id="devTypesTable">
@@ -74,7 +74,7 @@
 	  
 	</div>
 	<div class="card-footer">
-	  <button type="button" class="btn btn-primary" onClick="javascript:startSim();">Start Simulation</button>
+	  <button type="button" class="btn btn-primary btn-sm" onClick="javascript:startSim();">Start Simulation</button>
 	</div>
       </div>
     </div>
@@ -85,7 +85,7 @@
 
       <!-- SEPA -->
       <div class="card w-25 border border-primary rounded-0">
-	<div class="card-header text-primary"><i class="fa fa-tags" aria-hidden="true"></i>&nbsp;Properties</div>
+	<div class="card-header text-white bg-primary rounded-0"><i class="fa fa-tags" aria-hidden="true"></i>&nbsp;Properties</div>
 	<div class="card-body font-weight-light">
 	  <table class="table" id="propertiesTable">
 	  </table>
@@ -93,7 +93,7 @@
       </div>
       
       <div class="card w-25 border border-primary rounded-0">
-	<div class="card-header text-primary"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;Events</div>
+	<div class="card-header text-white bg-primary rounded-0"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;Events</div>
 	<div class="card-body font-weight-light">
 	  <table class="table" id="eventsTable">
 	  </table>	  
@@ -101,7 +101,7 @@
       </div>
       
       <div class="card w-25 border border-primary rounded-0">
-	<div class="card-header text-primary"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;Actions</div>
+	<div class="card-header text-white bg-primary rounded-0"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;Actions</div>
 	<div class="card-body font-weight-light">
 	  <table class="table" id="actionsTable">
 	  </table>	  
@@ -112,7 +112,7 @@
 
     <!-- LOG -->
     <div class="card border-primary rounded-0">
-      <div class="card-header text-primary">
+      <div class="card-header text-white bg-primary rounded-0">
 	<i class="fa fa-bars" aria-hidden="true"></i>&nbsp;Log Window
       </div>
       <div class="card-body">
@@ -120,40 +120,40 @@
 	</div>
       </div>
       <div class="card-footer">
-	<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#logWindow" aria-expanded="false" aria-controls="collapseExample">Show/Hide</button>
+	<button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#logWindow" aria-expanded="false" aria-controls="collapseExample">Show/Hide</button>
       </div>
     </div>
 
     <div class="card-group">
       <div class="card w-25 border border-primary rounded-0">
-	<div class="card-header text-primary"><i class="fa fa-bar-chart" aria-hidden="true"></i>&nbsp;Statistics</div>
+	<div class="card-header text-white bg-primary rounded-0"><i class="fa fa-bar-chart" aria-hidden="true"></i>&nbsp;Statistics</div>
 	<div class="card-body font-weight-light">
 	  <div id="charts"></div>
 	</div>
 
 	<div class="card-footer">
-	  <button type="button" class="btn btn-primary" onClick="javascript:getStatistics();">Get statistics</button>	
+	  <button type="button" class="btn btn-primary btn-sm" onClick="javascript:getStatistics();">Get statistics</button>	
 	</div>
 	
       </div>
 
       <div class="card w-25 border border-primary rounded-0">
-	<div class="card-header text-primary"><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;Subscriptions</div>
+	<div class="card-header text-white bg-primary rounded-0"><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;Subscriptions</div>
 	<div class="card-body font-weight-light">
 	  <div id="charts"></div>
 	</div>
 	<div class="card-footer">
-	  <button type="button" class="btn btn-primary" onClick="">Get statistics</button>	
+	  <button type="button" class="btn btn-primary btn-sm" onClick="">Get statistics</button>	
 	</div>
       </div>
 
       <div class="card w-25 border border-primary rounded-0">
-	<div class="card-header text-primary"><i class="fa fa-question-circle-o" aria-hidden="true"></i>&nbsp;Documentation</div>
+	<div class="card-header text-white bg-primary rounded-0"><i class="fa fa-question-circle-o" aria-hidden="true"></i>&nbsp;Documentation</div>
 	<div class="card-body font-weight-light">
 	  <div id="charts"></div>
 	</div>
 	<div class="card-footer">
-	  <button type="button" class="btn btn-primary" onClick="">Show Help</button>	
+	  <button type="button" class="btn btn-primary btn-sm" onClick="">Show Help</button>	
 	</div>
       </div> 
       
