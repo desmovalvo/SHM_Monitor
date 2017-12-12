@@ -187,3 +187,7 @@ function getStatistics() {
     // plot!
     Plotly.newPlot('charts', data, layout);
 }
+
+function clearLog(){
+    document.getElementById("logWindow").innerHTML = "";
+}
