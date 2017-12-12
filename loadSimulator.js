@@ -110,7 +110,7 @@ function startSim(){
 	    uuid = generateUUID();
 	    thingURI = thingURIScheme.replace("$(UUID)", uuid);
 	    thingName = thingNameScheme.replace("$(UUID)", uuid);	  
-	    sc.doUpdate(sc.getUpdate("ADD_NEW_THING", {"thing":thingURI, "name":thingName}),
+	    sc.doUpdate(sc.getUpdate("ADD_NEW_THING", {"thing":thingURI, "name":thingName}), "ADD_NEW_THING",
 			function(){
 			    logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_NEW_THING(' + thingURI + "," + thingName + ")<br>";
 			},
@@ -121,7 +121,7 @@ function startSim(){
 	    // generate properties
 	    for (prop in devTypes[devType]["properties"]){
 	    	[propURI,propName] = devTypes[devType]["properties"][prop].split("|");
-		sc.doUpdate(sc.getUpdate("ADD_PROPERTY", {"thing":thingURI, "property":propURI, "propName":propName}),
+		sc.doUpdate(sc.getUpdate("ADD_PROPERTY", {"thing":thingURI, "property":propURI, "propName":propName}), "ADD_PROPERTY",
 			function(){
 			    logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_PROPERTY(' + thingURI + "," + propURI + "," + propName + ")<br>";
 			},
@@ -133,7 +133,7 @@ function startSim(){
 	    // generate events
 	    for (event in devTypes[devType]["events"]){
 	    	[eventURI,eventName] = devTypes[devType]["events"][event].split("|");
-		sc.doUpdate(sc.getUpdate("ADD_EVENT", {"event":eventURI, "thing":thingURI, "eName":eventName, "outDataSchema":"-"}),
+		sc.doUpdate(sc.getUpdate("ADD_EVENT", {"event":eventURI, "thing":thingURI, "eName":eventName, "outDataSchema":"-"}), "ADD_EVENT",
 			    function(){
 				logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_EVENT(' + eventURI + "," + thingURI + "," + eventName + ")<br>";
 			    },
@@ -145,7 +145,7 @@ function startSim(){
 	    // generate actions
 	    for (action in devTypes[devType]["actions"]){
 	    	[actionURI,actionName] = devTypes[devType]["actions"][action].split("|");
-		sc.doUpdate(sc.getUpdate("ADD_NEW_ACTION", {"thing":thingURI, "action":actionURI, "actionName":actionName}),
+		sc.doUpdate(sc.getUpdate("ADD_NEW_ACTION", {"thing":thingURI, "action":actionURI, "actionName":actionName}), "ADD_NEW_ACTION",
 			    function(){
 				logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_NEW_ACTION(' + thingURI + "," + actionURI + "," + actionName + ")<br>";
 			    },
@@ -167,25 +167,53 @@ function clearTable(table){
 
 function getStatistics() {
 
-    console.log(sc.updateRequests);
-    console.log(sc.updateTimes);
-
+    // TIME GRAPHS
+    
     // updates
-    var trace1 = {
+    var traces = [];
+
+    // global indicator for updates
+    traces.push({
 	y: sc.updateTimes,
 	type: 'box',
-	name: 'Update Times (ms)'
+	boxpoints: 'all',
+	name: 'Total'
+    });
+
+    // indicator for labeled updates 
+    for (lbl in sc.updateByLabel){
+	console.log(lbl);
+	traces.push({
+	    y: sc.updateByLabel[lbl],
+	    type: 'box',
+	    boxpoints: 'all',
+	    name: lbl
+	});
     };
     
-    var data = [trace1];
-
+    var data = traces;
+    console.log(data);
     // set chart layout
     var layout = {
 	title: 'SEPA performance data'
     };
 
     // plot!
-    Plotly.newPlot('charts', data, layout);
+    Plotly.newPlot('updateTimeCharts', data, layout);
+    
+    // SUCCESS GRAPH
+    console.log([sc.updateRequestsSucc, sc.updateRequestsFail]);
+    var data = [{
+	values: [sc.updateRequestsSucc, sc.updateRequestsFail],
+	labels: ['Success', 'Failure'],
+	type: 'pie'
+    }];
+    // set chart layout
+    var layout = {
+	title: 'SEPA success ratio'
+    };
+    Plotly.newPlot('updateFailure', data, layout);
+    
 }
 
 function clearLog(){

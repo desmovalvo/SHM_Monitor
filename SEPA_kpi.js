@@ -24,6 +24,7 @@ function SEPAClient(){
     this.updateRequestsSucc = 0;
     this.updateRequestsFail = 0;
     this.updateTimes = []
+    this.updateByLabel = {};
     
     //////////////////////////////////////////////////////////////
     //
@@ -53,16 +54,20 @@ function SEPAClient(){
     };
 
     // update
-    this.doUpdate = function (updText, successCallback, failureCallback){
+    this.doUpdate = function (updText, updLabel, successCallback, failureCallback){
 
 	// debug print
 	console.log("doUpdate invoked");
 
-	// update counter
+	// update counters
 	this.updateRequests += 1;
+	if (!(updLabel in this.updateByLabel)){
+	    this.updateByLabel[updLabel] = [];
+	}	
 
 	// do the update
 	var t0 = performance.now();
+	var self = this;
 	var req = $.ajax({
 	    url: this.updateURI,
 	    crossOrigin: true,
@@ -71,17 +76,23 @@ function SEPAClient(){
 	    data: updText,	
 	    error: function(event){
 		console.log("[SEPA kpi] Connection failed!" + updText);
-		if (failureCallback !== undefined)
-		    failureCallback();		
+		if (failureCallback !== undefined){
+		    failureCallback();
+		    self.updateRequestsFail += 1;
+		}
 	    },
 	    success: function(data){
 		console.log("[SEPA kpi] Connection succeeded!");
-		if (successCallback !== undefined)
+		if (successCallback !== undefined){
 		    successCallback();
+		    self.updateRequestsSucc += 1;
+		}
 	    }
 	});
-	var t1 = performance.now();
-	this.updateTimes.push((t1-t0).toFixed(3));
+	    var t1 = performance.now();
+	    tt = (t1-t0).toFixed(3);
+	    this.updateTimes.push(tt);
+	    this.updateByLabel[updLabel].push(tt);
     };
     
     // query
