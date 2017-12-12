@@ -54,6 +54,7 @@
 	      <label for="sepaQueryURL"><i class="fa fa-download" aria-hidden="true"></i>&nbsp;Query URL</label>
 	      <input type="text" class="form-control" id="sepaQueryURL" placeholder="http://localhost:8000/query">
 	    </div>
+	    <button type="button" class="btn btn-primary" onClick="javascript:clearSEPA();">Clear SEPA</button>
 	  </form>
 	</div>
       </div>
@@ -79,7 +80,7 @@
       <div class="card w-25 p-3 border border-primary rounded-0">
 	<h3 class="card-title text-primary"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;Properties</h3>
 	<div class="card-body font-weight-light">
-	  <table class="table font-weight-light" id="propertiesTable">
+	  <table class="table" id="propertiesTable">
 	  </table>
 	</div>
       </div>
@@ -87,7 +88,7 @@
       <div class="card w-25 p-3 border border-primary rounded-0">
 	<h3 class="card-title text-primary"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;Events</h3>
 	<div class="card-body font-weight-light">
-	  <table class="table font-weight-light" id="eventsTable">
+	  <table class="table" id="eventsTable">
 	  </table>	  
 	</div>
       </div>
@@ -95,7 +96,7 @@
       <div class="card w-25 p-3 border border-primary rounded-0">
 	<h3 class="card-title text-primary"><i class="fa fa-plug" aria-hidden="true"></i>&nbsp;Actions</h3>
 	<div class="card-body font-weight-light">
-	  <table class="table font-weight-light" id="actionsTable">
+	  <table class="table" id="actionsTable">
 	  </table>	  
 	</div>
       </div> 

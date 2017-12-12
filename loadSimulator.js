@@ -11,6 +11,14 @@ function generateUUID() {
     return uuid;
 };
 
+function clearSEPA(){
+
+    // debug
+    console.log("[DEBUG] clearSEPA invoked");
+    sc.doUpdate("DELETE { ?s ?p ?o } WHERE { ?s ?p ?o }");
+
+}
+
 function loadJSAP(){
 
     // debug
@@ -37,8 +45,6 @@ function loadJSAP(){
     input = $i[0];
     if (input.files && input.files[0]) {
 	file = input.files[0];
-	console.log(file);
-	console.log($);
 	
 	// create a mew instance of the file reader
 	fr = new FileReader();		    
@@ -64,15 +70,15 @@ function loadJSAP(){
 		// load properties types
 		for (act in sc.jsap["extended"]["devices"][dev]["actions"]){
 		    newRow = actionsTable.insertRow(0);
-		    newRow.insertCell(0).outerHTML = sc.jsap["extended"]["devices"][dev]["actions"][act] + " (" + dev + ")";
+		    newRow.insertCell(0).outerHTML = sc.jsap["extended"]["devices"][dev]["actions"][act].split("|")[0] + " <i>(" + dev + ")</i>";
 		}	    	    
 		for (prop in sc.jsap["extended"]["devices"][dev]["properties"]){
 		    newRow = propertiesTable.insertRow(0);
-		    newRow.insertCell(0).outerHTML = sc.jsap["extended"]["devices"][dev]["properties"][prop] + " (" + dev + ")";
+		    newRow.insertCell(0).outerHTML = sc.jsap["extended"]["devices"][dev]["properties"][prop].split("|")[0] + " <i>(" + dev + ")</i>";
 		}
 		for (ev in sc.jsap["extended"]["devices"][dev]["events"]){
 		    newRow = eventsTable.insertRow(0);
-		    newRow.insertCell(0).outerHTML = sc.jsap["extended"]["devices"][dev]["events"][ev] + " (" + dev + ")";
+		    newRow.insertCell(0).outerHTML = sc.jsap["extended"]["devices"][dev]["events"][ev].split("|")[0] + " <i>(" + dev + ")</i>";
 		}	    	    
 		
 	    }	    	    
@@ -89,7 +95,7 @@ function startSim(){
     
     // iterate over the classes of devices
     for (devType in devTypes){
-	console.log("Creating " + devTypes[devType]["number"] + " instances of " + devTypes[devType]["thing"]);
+	console.log("[DEBUG] Creating " + devTypes[devType]["number"] + " instances of " + devTypes[devType]["thing"]);
 
 	// get the thing URI and name scheme
 	[thingURIScheme, thingNameScheme] = devTypes[devType]["thing"].split("|");
@@ -100,13 +106,13 @@ function startSim(){
 	    // generate real thing URI and name
 	    uuid = generateUUID();
 	    thingURI = thingURIScheme.replace("$(UUID)", uuid);
-	    thingName = "'" + thingNameScheme.replace("$(UUID)", uuid) + "'";	  
+	    thingName = thingNameScheme.replace("$(UUID)", uuid);	  
 	    sc.doUpdate(sc.getUpdate("ADD_NEW_THING", {"thing":thingURI, "name":thingName}),
 			function(){
 			    logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_NEW_THING(' + thingURI + "," + thingName + ")<br>";
 			},
 			function(){
-			    logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_NEW_THING(' + thingURI + "," + thingName + ")<br>";
+			    logWindow.innerHTML += '<i class="fa fa-times" aria-hidden="true"></i> ADD_NEW_THING(' + thingURI + "," + thingName + ")<br>";
 			});
 	    
 	    // generate properties

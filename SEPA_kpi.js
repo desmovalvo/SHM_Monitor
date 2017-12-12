@@ -56,7 +56,7 @@ function SEPAClient(){
 	    contentType: "application/sparql-update",
 	    data: updText,	
 	    error: function(event){
-		console.log("[SEPA kpi] Connection failed!");
+		console.log("[SEPA kpi] Connection failed!" + updText);
 		if (failureCallback !== undefined)
 		    failureCallback();
 	    },
