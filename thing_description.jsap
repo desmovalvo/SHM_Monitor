@@ -394,21 +394,24 @@
                 "properties":["shm:hasHealth|Health"],
                 "events":["wot:Ping|Ping", "shm:Impact|Impact"],
                 "actions":["shm:getHistory|Get History", "shm:setHealth|Set Health"],
-                "number":1
+                "number":1,
+		"otherUpdates":[]
             },
             "ImpactSensor":{
                 "thing":"shm:ImpactSensor_$(UUID)|ImpactSensor_$(UUID)",
                 "properties": ["shm:belongsToStructure|Structure", "shm:hasPosition|Position"],
                 "events":["wot:Ping|Ping", "shm:hasImpact|Impact"],
                 "actions": ["shm:getHistory|Get History", "shm:setMode|Set Mode"],
-                "number":1
+                "number":1,
+		"otherUpdates":[]
             },
             "Accelerometer":{
                 "thing":"shm:Accelerometer_$(UUID)|Accelerometer_$(UUID)",
                 "properties": ["shm:belongsToStructure|Structure", "shm:hasPosition|Position"],
                 "events":["wot:Ping|Ping", "shm:hasImpact|Impact"],
                 "actions": ["shm:getHistory|Get History", "shm:setMode|Set Mode", "shm:getAcceleration|Get Acceleration"],
-                "number":1
+                "number":1,
+		"otherUpdates":[]
             }               
         }
     }

@@ -219,3 +219,10 @@ function getStatistics() {
 function clearLog(){
     document.getElementById("logWindow").innerHTML = "";
 }
+
+function clearStats(){
+    console.log("[INFO] clearStats() invoked");
+    sc.resetStats();
+    document.getElementById("updateTimeCharts").innerHTML = "";
+    document.getElementById("updateFailure").innerHTML = "";
+}

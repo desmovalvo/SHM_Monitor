@@ -173,5 +173,16 @@ function SEPAClient(){
     	};
     	return this.prefixes + uqtext;
     };
+
+    // reset stats
+    this.resetStats = function(){
+    
+        // reset attributes used for statistics
+	this.updateRequests = 0;
+	this.updateRequestsSucc = 0;
+	this.updateRequestsFail = 0;
+	this.updateTimes = []
+	this.updateByLabel = {};	
+    }
     
 }
