@@ -72,9 +72,9 @@ function loadJSAP(){
 	    for (k in jsap["extended"]["servers"]){	
 		document.getElementById("URIform").innerHTML += '<i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;Subscribe URL (' + k + ')' +
 		    '<input type="text" class="form-control" id="' + k + '_subscribeURI" value=' + jsap["extended"]["servers"][k]["subscribeURI"] + '>';
-		document.getElementById("URIform").innerHTML += '<i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;Update URL (' + k + ')' +
+		document.getElementById("URIform").innerHTML += '<i class="fa fa-upload" aria-hidden="true"></i>&nbsp;Update URL (' + k + ')' +
 		    '<input type="text" class="form-control" id="' + k + '_updateURI" value=' + jsap["extended"]["servers"][k]["updateURI"] + '>';
-		document.getElementById("URIform").innerHTML += '<input type="checkbox" name="' + k + '_enabled" id="' + k + '_enabled" value="Bike">&nbsp;Enabled<br>';
+		document.getElementById("URIform").innerHTML += '<input type="checkbox" name="' + k + '_enabled" id="' + k + '_enabled" value="-">&nbsp;Enabled<br><br>';
 	    }
 
 	    // load device types
@@ -218,14 +218,17 @@ function getStatistics() {
     });
 
     // indicator for labeled updates 
-    for (lbl in sc.updateByLabel){
-	console.log(lbl);
-	traces.push({
-	    y: sc.updateByLabel[lbl],
-	    type: 'box',
-	    boxpoints: 'all',
-	    name: lbl
-	});
+    for (srv in sc.updateByLabel){
+	console.log(srv);
+	for (lbl in sc.updateByLabel[srv]){
+	    console.log(srv, lbl);
+	    traces.push({
+		y: sc.updateByLabel[srv][lbl],
+		type: 'box',
+		boxpoints: 'all',
+		name: lbl + "(" + srv + ")"
+	    });
+	}
     };
     
     var data = traces;

@@ -55,8 +55,11 @@ function SEPAClient(){
 
 	// update counters
 	this.updateRequests += 1;
-	if (!(updLabel in this.updateByLabel)){
-	    this.updateByLabel[updLabel] = [];
+	if (!(updURI in this.updateByLabel)){
+	    this.updateByLabel[updURI] = [];
+	}
+	if (!(updLabel in this.updateByLabel[updURI])){
+	    this.updateByLabel[updURI][updLabel] = [];
 	}	
 
 	// do the update
@@ -85,7 +88,7 @@ function SEPAClient(){
 	    var t1 = performance.now();
 	    tt = (t1-t0).toFixed(3);
 	    this.updateTimes.push(tt);
-	    this.updateByLabel[updLabel].push(tt);
+	    this.updateByLabel[updURI][updLabel].push(tt);
     };
     
     // query
