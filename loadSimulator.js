@@ -1,5 +1,6 @@
 var devTypes = {};
 var sc = null;
+var jsap = null;
 
 function generateUUID() {
     var d = new Date().getTime();
@@ -13,9 +14,19 @@ function generateUUID() {
 
 function clearSEPA(){
 
-    // debug
-    console.log("[DEBUG] clearSEPA invoked");
-    sc.doUpdate("DELETE { ?s ?p ?o } WHERE { ?s ?p ?o }");
+    // iterate over servers
+    for (server in jsap["extended"]["servers"]){
+
+	// check if server is enabled
+	if (!(document.getElementById(server + "_enabled").checked))
+	    continue;
+	
+	// get the update uri
+	updateURI = document.getElementById(server + "_updateURI").value;
+	
+	// debug
+	sc.doUpdate(updateURI, "DELETE { ?s ?p ?o } WHERE { ?s ?p ?o }");
+    }
 
 }
 
@@ -53,13 +64,18 @@ function loadJSAP(){
 	    
 	    // read the content of the file and create a SEPA Client
 	    var decodedData = fr.result;
+	    jsap = JSON.parse(decodedData);
 	    sc = new SEPAClient();
 	    sc.getJsap(decodedData);
     
-	    // load SEPA URIs
-	    document.getElementById("sepaUpdateURL").value = sc.updateURI;
-	    document.getElementById("sepaQueryURL").value = sc.queryURI;    
-	    document.getElementById("sepaSubscribeURL").value = sc.subscribeURI;        
+	    // parse the extended section for the list of endpoints
+	    for (k in jsap["extended"]["servers"]){	
+		document.getElementById("URIform").innerHTML += '<i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;Subscribe URL (' + k + ')' +
+		    '<input type="text" class="form-control" id="' + k + '_subscribeURI" value=' + jsap["extended"]["servers"][k]["subscribeURI"] + '>';
+		document.getElementById("URIform").innerHTML += '<i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;Update URL (' + k + ')' +
+		    '<input type="text" class="form-control" id="' + k + '_updateURI" value=' + jsap["extended"]["servers"][k]["updateURI"] + '>';
+		document.getElementById("URIform").innerHTML += '<input type="checkbox" name="' + k + '_enabled" id="' + k + '_enabled" value="Bike">&nbsp;Enabled<br>';
+	    }
 
 	    // load device types
 	    devTypes = sc.jsap["extended"]["devices"];
@@ -88,73 +104,94 @@ function loadJSAP(){
     }
 }
 
-
 function startSim(){
 
     // get the log window
     logWindow = document.getElementById("logWindow");
-    
-    // iterate over the classes of devices
-    for (devType in devTypes){
 
-	// get the thing URI and name scheme
-	[thingURIScheme, thingNameScheme] = devTypes[devType]["thing"].split("|");
-	
-	// create the right number of instances
-	devNumber = document.getElementById(devType).innerHTML;
-	console.log("[DEBUG] Creating " + devNumber + " instances of " + devTypes[devType]["thing"]);
-	
-	for (i = 0; i < devNumber; i++){
+    // iterate over the servers
+    for (server in jsap["extended"]["servers"]){
 
-	    // generate real thing URI and name
-	    uuid = generateUUID();
-	    thingURI = thingURIScheme.replace("$(UUID)", uuid);
-	    thingName = thingNameScheme.replace("$(UUID)", uuid);	  
-	    sc.doUpdate(sc.getUpdate("ADD_NEW_THING", {"thing":thingURI, "name":thingName}), "ADD_NEW_THING",
-			function(){
-			    logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_NEW_THING(' + thingURI + "," + thingName + ")<br>";
-			},
-			function(){
-			    logWindow.innerHTML += '<i class="fa fa-times" aria-hidden="true"></i> ADD_NEW_THING(' + thingURI + "," + thingName + ")<br>";
-			});
+	// check if server is enabled
+	if (!(document.getElementById(server + "_enabled").checked))
+	    continue;
+	
+	// get the update uri
+	updateURI = document.getElementById(server + "_updateURI").value;
+	
+	// iterate over the classes of devices
+	for (devType in devTypes){
+
+	    // get the thing URI and name scheme
+	    console.log(devTypes[devType]["thing"].split("|"));
+	    var thingURIScheme = null;
+	    var thingNameScheme = null;
+	    [thingURIScheme, thingNameScheme] = devTypes[devType]["thing"].split("|");
+	    console.log([thingURIScheme, thingNameScheme]);
+	    console.log(thingURIScheme, thingNameScheme);
+	    // create the right number of instances
+	    devNumber = document.getElementById(devType).innerHTML;
+	    console.log("[DEBUG] Creating " + devNumber + " instances of " + devTypes[devType]["thing"]);
 	    
-	    // generate properties
-	    for (prop in devTypes[devType]["properties"]){
-	    	[propURI,propName] = devTypes[devType]["properties"][prop].split("|");
-		sc.doUpdate(sc.getUpdate("ADD_PROPERTY", {"thing":thingURI, "property":propURI, "propName":propName}), "ADD_PROPERTY",
-			function(){
-			    logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_PROPERTY(' + thingURI + "," + propURI + "," + propName + ")<br>";
-			},
-			function(){
-			    logWindow.innerHTML += '<i class="fa fa-times" aria-hidden="true"></i> ADD_PROPERTY(' + thingURI + "," + propURI + "," + propName + ")<br>";
-			});		
-	    }
-	    
-	    // generate events
-	    for (event in devTypes[devType]["events"]){
-	    	[eventURI,eventName] = devTypes[devType]["events"][event].split("|");
-		sc.doUpdate(sc.getUpdate("ADD_EVENT", {"event":eventURI, "thing":thingURI, "eName":eventName, "outDataSchema":"-"}), "ADD_EVENT",
-			    function(){
-				logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_EVENT(' + eventURI + "," + thingURI + "," + eventName + ")<br>";
+	    for (i = 0; i < devNumber; i++){
+
+		// generate real thing URI and name
+		var uuid = generateUUID();
+		console.log("++ generato: " + uuid);
+		console.log("++ thingURIScheme: " + thingURIScheme);
+		thingURI = thingURIScheme.replace("$(UUID)", uuid);
+		thingName = thingNameScheme.replace("$(UUID)", uuid);
+		console.log(thingURI);
+		sc.doUpdate(updateURI, sc.getUpdate("ADD_NEW_THING", {"thing":thingURI, "name":thingName}), "ADD_NEW_THING",
+			    function(msg){
+				logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ' + msg + "<br>";
 			    },
-			    function(){
-				logWindow.innerHTML += '<i class="fa fa-times" aria-hidden="true"></i> ADD_EVENT(' + eventURI + "," + thingURI + "," + eventName + ")<br>";
-			    });				
+			    function(msg){
+				logWindow.innerHTML += '<i class="fa fa-times" aria-hidden="true"></i> ' + msg + "<br>";
+			    });
+		
+		// generate properties
+		for (prop in devTypes[devType]["properties"]){
+	    	    [propURI,propName] = devTypes[devType]["properties"][prop].split("|");
+		    sc.doUpdate(updateURI, sc.getUpdate("ADD_PROPERTY", {"thing":thingURI, "property":propURI, "propName":propName}), "ADD_PROPERTY",
+				function(msg){
+				    logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i>' + msg + '<br>';
+				},
+				function(msg){
+				    logWindow.innerHTML += '<i class="fa fa-times" aria-hidden="true"></i>' + msg + '<br>';
+				});		
+		}
+		
+		// generate events
+		for (event in devTypes[devType]["events"]){
+	    	    [eventURI,eventName] = devTypes[devType]["events"][event].split("|");
+		    sc.doUpdate(updateURI, sc.getUpdate("ADD_EVENT", {"event":eventURI, "thing":thingURI, "eName":eventName, "outDataSchema":"-"}), "ADD_EVENT",
+				function(msg){
+				    logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i>' + msg + '<br>';
+				},
+				function(msg){
+				    logWindow.innerHTML += '<i class="fa fa-times" aria-hidden="true"></i>' + msg + '<br>';
+				});				
+		}
+		
+		// generate actions
+		for (action in devTypes[devType]["actions"]){
+	    	    [actionURI,actionName] = devTypes[devType]["actions"][action].split("|");
+		    sc.doUpdate(updateURI, sc.getUpdate("ADD_NEW_ACTION", {"thing":thingURI, "action":actionURI, "actionName":actionName}), "ADD_NEW_ACTION",
+				function(msg){
+				    logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i>' + msg + '<br>';
+				},
+				function(msg){
+				    logWindow.innerHTML += '<i class="fa fa-times" aria-hidden="true"></i>' + msg + '<br>';
+				});	
+		}
+
+		// generate worker to send ping	    
+		// startWorker(thingURI);
+		
 	    }
 	    
-	    // generate actions
-	    for (action in devTypes[devType]["actions"]){
-	    	[actionURI,actionName] = devTypes[devType]["actions"][action].split("|");
-		sc.doUpdate(sc.getUpdate("ADD_NEW_ACTION", {"thing":thingURI, "action":actionURI, "actionName":actionName}), "ADD_NEW_ACTION",
-			    function(){
-				logWindow.innerHTML += '<i class="fa fa-check" aria-hidden="true"></i> ADD_NEW_ACTION(' + thingURI + "," + actionURI + "," + actionName + ")<br>";
-			    },
-			    function(){
-				logWindow.innerHTML += '<i class="fa fa-times" aria-hidden="true"></i> ADD_NEW_ACTION(' + thingURI + "," + actionURI + "," + actionName + ")<br>";
-			    });	
-	    }
 	}
-	
     }
     
 }
@@ -225,4 +262,19 @@ function clearStats(){
     sc.resetStats();
     document.getElementById("updateTimeCharts").innerHTML = "";
     document.getElementById("updateFailure").innerHTML = "";
+}
+
+function startWorker(thingURI){
+    if(typeof(Worker) !== "undefined") {
+        if(typeof(w) == "undefined") {
+            w = new Worker("ping.js");
+	    console.log(thingURI);
+	    w.postMessage(thingURI);
+        }
+        w.onmessage = function(event) {
+            document.getElementById("logWindow").innerHTML = event.data;
+        };
+    } else {
+        document.getElementById("logWindow").innerHTML = "Sorry! No Web Worker support.";
+    }
 }

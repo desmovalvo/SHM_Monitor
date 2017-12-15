@@ -35,9 +35,6 @@ function SEPAClient(){
     // parse the jsap
     this.getJsap = function (decodedJsap){
 
-	// debug print
-	console.log("getJsap invoked");
-
 	// store the jsap
 	this.jsap = JSON.parse(decodedJsap);
 	
@@ -54,10 +51,7 @@ function SEPAClient(){
     };
 
     // update
-    this.doUpdate = function (updText, updLabel, successCallback, failureCallback){
-
-	// debug print
-	console.log("doUpdate invoked");
+    this.doUpdate = function (updURI, updText, updLabel, successCallback, failureCallback){
 
 	// update counters
 	this.updateRequests += 1;
@@ -69,7 +63,7 @@ function SEPAClient(){
 	var t0 = performance.now();
 	var self = this;
 	var req = $.ajax({
-	    url: this.updateURI,
+	    url: updURI,
 	    crossOrigin: true,
 	    method: 'POST',
 	    contentType: "application/sparql-update",
@@ -77,14 +71,13 @@ function SEPAClient(){
 	    error: function(event){
 		console.log("[SEPA kpi] Connection failed!" + updText);
 		if (failureCallback !== undefined){
-		    failureCallback();
+		    failureCallback(updLabel);
 		    self.updateRequestsFail += 1;
 		}
 	    },
 	    success: function(data){
-		console.log("[SEPA kpi] Connection succeeded!");
 		if (successCallback !== undefined){
-		    successCallback();
+		    successCallback(updLabel);
 		    self.updateRequestsSucc += 1;
 		}
 	    }
@@ -97,7 +90,6 @@ function SEPAClient(){
     
     // query
     this.doQuery = function (queryText){
-	console.log("doQuery invoked");
 	var req = $.ajax({
 	    url: this.queryURI,
 	    crossOrigin: true,
@@ -109,7 +101,6 @@ function SEPAClient(){
 		return false;
 	    },
 	    success: function(data){
-		console.log("[SEPA kpi] Connection succeeded!");
 		return true;	    
 	    }
 	});
@@ -118,9 +109,6 @@ function SEPAClient(){
     // get update
     this.getUpdate = function (updateName, forcedBindings){
 	
-    	// debug
-    	console.log("[SEPA kpi] getUpdate invoked");
-
     	// replace forced bindings
     	var uqtext = this.jsap["updates"][updateName]["sparql"];
     	for (var c in forcedBindings){
@@ -156,9 +144,6 @@ function SEPAClient(){
     // get query
     this.getQuery = function(queryName, forcedBindings){
 	
-    	// debug
-    	console.log("[SEPA kpi] getQuery invoked");
-
     	// replace forced bindings
     	var uqtext = this.jsap["queries"][queryName]["sparql"]
     	for (var c in forcedBindings){

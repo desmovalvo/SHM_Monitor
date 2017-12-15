@@ -388,6 +388,23 @@
     },
     "creation_time": "2017-12-07 18:15:08",
     "extended":{
+	"servers":{
+	    "naive":{
+		"subscribeURI":"ws://localhost:9000/subscribe",
+		"updateURI":"http://localhost:8000/update",
+		"queryURI":"http://localhost:8000/query"
+	    },
+	    "lutt":{
+		"subscribeURI":"ws://localhost:9000/subscribe",
+		"updateURI":"http://localhost:8000/update",
+		"queryURI":"http://localhost:8000/query"
+	    },
+	    "centralutt":{
+		"subscribeURI":"ws://localhost:9000/subscribe",
+		"updateURI":"http://localhost:8000/update",
+		"queryURI":"http://localhost:8000/query"
+	    }
+	},
         "devices":{
             "Plate":{
                 "thing":"shm:Plate_$(UUID)|Plate_$(UUID)",
