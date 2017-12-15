@@ -20,9 +20,9 @@ function SEPAClient(){
     this.lastUpdate = null;
 
     // attributes used for statistics
-    this.updateRequests = 0;
-    this.updateRequestsSucc = 0;
-    this.updateRequestsFail = 0;
+    this.updateRequests = {};
+    this.updateRequestsSucc = {};
+    this.updateRequestsFail = {};
     this.updateTimes = []
     this.updateByLabel = {};
     
@@ -54,7 +54,14 @@ function SEPAClient(){
     this.doUpdate = function (updURI, updText, updLabel, successCallback, failureCallback){
 
 	// update counters
-	this.updateRequests += 1;
+	if (!(updURI in this.updateRequests)){
+	    this.updateRequests[updURI] = 0;
+	    this.updateRequestsSucc[updURI] = 0;
+	    this.updateRequestsFail[updURI] = 0;
+	}
+	
+	// update counters
+	this.updateRequests[updURI] += 1;
 	if (!(updURI in this.updateByLabel)){
 	    this.updateByLabel[updURI] = [];
 	}
@@ -75,20 +82,20 @@ function SEPAClient(){
 		console.log("[SEPA kpi] Connection failed!" + updText);
 		if (failureCallback !== undefined){
 		    failureCallback(updLabel);
-		    self.updateRequestsFail += 1;
+		    self.updateRequestsFail[updURI] += 1;
 		}
 	    },
 	    success: function(data){
 		if (successCallback !== undefined){
 		    successCallback(updLabel);
-		    self.updateRequestsSucc += 1;
+		    self.updateRequestsSucc[updURI] += 1;
 		}
 	    }
 	});
-	    var t1 = performance.now();
-	    tt = (t1-t0).toFixed(3);
-	    this.updateTimes.push(tt);
-	    this.updateByLabel[updURI][updLabel].push(tt);
+	var t1 = performance.now();
+	tt = (t1-t0).toFixed(3);
+	this.updateTimes.push(tt);
+	this.updateByLabel[updURI][updLabel].push(tt);
     };
     
     // query
@@ -166,9 +173,9 @@ function SEPAClient(){
     this.resetStats = function(){
     
         // reset attributes used for statistics
-	this.updateRequests = 0;
-	this.updateRequestsSucc = 0;
-	this.updateRequestsFail = 0;
+	this.updateRequests = {};
+	this.updateRequestsSucc = {};
+	this.updateRequestsFail = {};
 	this.updateTimes = []
 	this.updateByLabel = {};	
     }

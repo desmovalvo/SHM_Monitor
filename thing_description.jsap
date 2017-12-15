@@ -395,14 +395,14 @@
 		"queryURI":"http://localhost:8000/query"
 	    },
 	    "lutt":{
-		"subscribeURI":"ws://localhost:9000/subscribe",
-		"updateURI":"http://localhost:8000/update",
-		"queryURI":"http://localhost:8000/query"
+		"subscribeURI":"ws://127.0.0.1:9000/subscribe",
+		"updateURI":"http://127.0.0.1:8000/update",
+		"queryURI":"http://127.0.0.1:8000/query"
 	    },
 	    "centralutt":{
-		"subscribeURI":"ws://localhost:9000/subscribe",
-		"updateURI":"http://localhost:8000/update",
-		"queryURI":"http://localhost:8000/query"
+		"subscribeURI":"ws://127.0.1.1:9000/subscribe",
+		"updateURI":"http://127.0.1.1:8000/update",
+		"queryURI":"http://127.0.1.1:8000/query"
 	    }
 	},
         "devices":{

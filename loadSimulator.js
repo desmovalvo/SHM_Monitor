@@ -243,16 +243,23 @@ function getStatistics() {
     
     // SUCCESS GRAPH
     console.log([sc.updateRequestsSucc, sc.updateRequestsFail]);
-    var data = [{
-	values: [sc.updateRequestsSucc, sc.updateRequestsFail],
-	labels: ['Success', 'Failure'],
-	type: 'pie'
-    }];
+    var data = [];
+    for (srv in sc.updateRequests){
+	data.push({
+	    x: ['Success (' + srv + ')', 'Failure (' + srv + ')'],
+	    y: [sc.updateRequestsSucc[srv], sc.updateRequestsFail[srv]],
+	    type: 'bar',
+	    name: srv
+	});
+    }
     // set chart layout
     var layout = {
-	title: 'SEPA success ratio'
+	title: 'SEPA success ratio',
+	barmode: 'stack'
     };
+    console.log(data);
     Plotly.newPlot('updateFailure', data, layout);
+
     
 }
 
