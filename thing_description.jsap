@@ -57,7 +57,20 @@
                 }
             }
         },
-        "ADD_CONFIRMATION_TIMESTAMP": {
+	"POST_NEW_EVENT_WITHOUT_OUTPUT": {
+            "forcedBindings": {
+                "event": {
+                    "value": "",
+                    "type": "uri"
+                },
+                "thing": {
+                    "value": "",
+                    "type": "uri"
+                }
+            },
+            "sparql": "DELETE {?event wot:hasEventInstance ?oldInstance. ?oldInstance rdf:type wot:EventInstance. ?oldInstance wot:hasTimeStamp ?oldTimeStamp} INSERT { ?event wot:hasEventInstance ?newInstance. ?newInstance rdf:type wot:EventInstance. ?newInstance wot:hasTimeStamp ?newTimeStamp} WHERE {?thing td:hasEvent ?event. ?event rdf:type td:Event. BIND(now() AS ?newTimeStamp). BIND(IRI(CONCAT('wot:instance_',STR(NOW()))) as ?newInstance). OPTIONAL{ ?event wot:hasEventInstance ?oldInstance. ?oldInstance rdf:type wot:EventInstance. ?oldInstance wot:hasTimeStamp ?oldTimeStamp}}"
+	},
+	"ADD_CONFIRMATION_TIMESTAMP": {
             "sparql": "INSERT {?instance rdf:type wot:ActionInstance. ?instance wot:hasConfirmationTimeStamp ?time} WHERE {BIND(now() AS ?time)}",
             "forcedBindings": {
                 "instance": {
@@ -430,7 +443,26 @@
                 "number":1,
 		"otherUpdates":[]
             }               
-        }
+        },
+	"tests":{
+	    "notificationTime":{
+		"update":{
+		    "name":"POST_NEW_EVENT_WITHOUT_OUTPUT",
+		    "forcedBindings":{"event":"wot:Ping"}
+		},
+		"activeSubscription":{
+		    "name":"GET_EVENT_NOTIFICATION",
+		    "forcedBindings":{}
+		},
+		"passiveSubscription":{
+		    "name":"GET_THING_BY_NAME",
+		    "forcedBindings":{},
+		    "number":1
+		},
+		"iterations":2
+	    },	
+	    "server":"http://localhost:5000/notificationTime"
+	}
     }
 
 }

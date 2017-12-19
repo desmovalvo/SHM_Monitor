@@ -98,7 +98,12 @@ function loadJSAP(){
 		    newRow.insertCell(0).outerHTML = sc.jsap["extended"]["devices"][dev]["events"][ev].split("|")[0] + " <i>(" + dev + ")</i>";
 		}	    	    
 		
-	    }	    	    
+	    }
+
+	    // iterate over the tests
+	    for (test in jsap["extended"]["tests"]){
+		document.getElementById("testList").innerHTML += '<button type="button" class="btn btn-primary btn-sm" onClick="javascript:doTest(\'' + test + '\');">' + test + '</button>';
+	    }	    
 	};
 	fr.readAsText(file);		
     }
@@ -108,7 +113,7 @@ function startSim(){
 
     // get the log window
     logWindow = document.getElementById("logWindow");
-
+    
     // iterate over the servers
     for (server in jsap["extended"]["servers"]){
 
@@ -287,4 +292,47 @@ function startWorker(thingURI){
     } else {
         document.getElementById("logWindow").innerHTML = "Sorry! No Web Worker support.";
     }
+}
+
+function doTest(testName){
+
+    // prepare the test configuration for the server
+    // 0 - initialize object
+    testConf = {};
+    testConf["name"] = testName;
+    testConf["servers"] = {};    
+    
+    // 1 - servers to be tested
+    for (server in jsap["extended"]["servers"]){
+
+	// skip disabled servers
+	if (!(document.getElementById(server + "_enabled").checked))
+	    continue;
+
+	// add the active server to the list
+	testConf["servers"][server] = {};
+	testConf["servers"][server]["subscribeURI"] = document.getElementById(server + "_subscribeURI").value;
+	testConf["servers"][server]["updateURI"] = document.getElementById(server + "_updateURI").value;
+    }
+
+    // 2 - test conf
+    testConf["test"] = {};
+    testConf["test"]["iterations"] = jsap["extended"]["tests"][testName]["iterations"];
+    testConf["test"]["update"] = sc.getUpdate(jsap["extended"]["tests"][testName]["update"]["name"], jsap["extended"]["tests"][testName]["update"]["forcedBindings"]);
+    testConf["test"]["activeSubscription"] = sc.getQuery(jsap["extended"]["tests"][testName]["activeSubscription"]["name"], jsap["extended"]["tests"][testName]["activeSubscription"]["forcedBindings"]);
+    console.log(testConf["test"]["update"]);
+
+    // debug print
+    console.log("Requesting test " + testName);
+
+    // start the websocket
+    const socket = new WebSocket('ws://localhost:8888/tst');
+    socket.addEventListener('open', function (event) {
+    	socket.send(JSON.stringify(testConf));
+    });
+    socket.addEventListener('message', function(event){
+    	console.log(event.data);
+	socket.close();
+    });
+    
 }
