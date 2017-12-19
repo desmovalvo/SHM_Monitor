@@ -330,9 +330,48 @@ function doTest(testName){
     socket.addEventListener('open', function (event) {
     	socket.send(JSON.stringify(testConf));
     });
+
+    // on receiving a message
     socket.addEventListener('message', function(event){
-    	console.log(event.data);
+
+	results = JSON.parse(event.data);
+	console.log(event.data);
 	socket.close();
+
+	// draw
+	var traces = [];
+	
+	// // global indicator for updates
+	// traces.push({
+	//     y: sc.updateTimes,
+	//     type: 'box',
+	//     boxpoints: 'all',
+	//     name: 'Total'
+	// });
+	
+	// // indicator for labeled updates 
+	for (srv in results){
+	    d = []
+	    for (t in results[srv]){
+		d.push(results[srv][t]);
+	    };
+	    traces.push({
+		y: d,
+		type: 'bar',
+		name: srv	
+	    });
+	};
+	
+	var data = traces;
+	// console.log(data);
+	// // set chart layout
+	var layout = {
+	    title: 'SEPA performance data'
+	};
+	
+	// // plot!
+	Plotly.newPlot('updateTimeCharts', data, layout);
+	
     });
     
 }

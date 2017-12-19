@@ -461,7 +461,8 @@
 		},
 		"iterations":2
 	    },	
-	    "server":"http://localhost:5000/notificationTime"
+	    "server":"http://localhost:5000/notificationTime",
+	    "chartType":"bar"
 	}
     }
 
